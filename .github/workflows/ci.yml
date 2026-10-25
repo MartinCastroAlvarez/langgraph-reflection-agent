@@ -1,0 +1,94 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  lint:
+    name: Lint (ruff + mypy + bandit)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
+      - name: Install Poetry
+        run: pipx install poetry
+      - name: Install dependencies
+        run: poetry install --no-interaction --all-extras
+      - name: ruff check
+        run: poetry run ruff check reflection_agent tests examples
+      - name: ruff format --check
+        run: poetry run ruff format --check reflection_agent tests examples
+      - name: mypy
+        run: poetry run mypy reflection_agent
+      - name: bandit
+        run: poetry run bandit -c pyproject.toml -q -r reflection_agent
+
+  audit:
+    name: pip-audit
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
+      - name: Install Poetry
+        run: pipx install poetry
+      - name: Install dependencies
+        run: poetry install --no-interaction --no-root --all-extras
+      - name: pip-audit
+        run: |
+          # pip is tooling, not a shipped dependency: upgrade it so its own advisories don't fail the audit.
+          poetry run python -m pip install --upgrade -q pip
+          poetry run pip-audit
+
+  test:
+    name: Tests (Python ${{ matrix.python-version }})
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.11", "3.12", "3.13"]
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-python@v6
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Install Poetry
+        run: pipx install poetry
+      - name: Install dependencies
+        run: poetry install --no-interaction
+      - name: Run pytest (fake model, real sandbox, no network)
+        run: poetry run pytest -q
+      - name: Quickstart example (three variants + persistent lessons, offline)
+        run: poetry run python -m examples.quickstart
+      - name: CLI smoke run (fake provider, all variants)
+        run: poetry run python -m reflection_agent --provider fake --variant all "Explain idempotency keys for a payments API in at most three sentences."
+      - name: Lessons survive the process (SQLite store, two runs)
+        run: |
+          poetry run python -m reflection_agent --provider fake --variant reflexion --code-task roman --memory ci.db --quiet
+          poetry run python -m reflection_agent --provider fake --variant reflexion --code-task roman --memory ci.db --json > out.json
+          python -c "import json; r = json.load(open('out.json')); assert r['recalled'] == 2 and r['attempts'] == 1, r"
+      - name: Benchmark + convergence plot
+        run: poetry run python -m reflection_agent.bench --plot convergence.png && test -s convergence.png
+      - name: Build the wheel and check the sandbox child and corpus are inside
+        run: |
+          poetry build -q
+          python - <<'PY'
+          import glob, zipfile
+          names = zipfile.ZipFile(glob.glob("dist/*.whl")[0]).namelist()
+          for f in ("sandbox_child.py", "luhn.md", "py.typed", "data/README.md"):
+              assert any(n.endswith(f) for n in names), f
+          print("wheel ok:", len(names), "files")
+          PY

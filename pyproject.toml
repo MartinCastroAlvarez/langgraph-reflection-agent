@@ -1,0 +1,159 @@
+[tool.poetry]
+name = "langgraph-reflection-agent"
+version = "0.1.0"
+description = "The reflection agent architecture in LangGraph, three ways: basic reflection (draft, rubric critique, revise until a score threshold), Reflexion (self-critique, local search and calculator tools, cited revisions, verbal lessons in episodic memory, unit tests in a hardened sandbox) and LATS-lite (UCT tree search over reflected candidates with backpropagated values). Runs 100% locally on ollama."
+authors = ["Martín Castro Álvarez <martincastro.10.5@gmail.com>"]
+license = "MIT"
+readme = "README.md"
+homepage = "https://github.com/MartinCastroAlvarez/langgraph-reflection-agent"
+repository = "https://github.com/MartinCastroAlvarez/langgraph-reflection-agent"
+documentation = "https://github.com/MartinCastroAlvarez/langgraph-reflection-agent#readme"
+keywords = [
+    "langgraph",
+    "langchain",
+    "ai-agents",
+    "reflection",
+    "reflexion",
+    "self-critique",
+    "lats",
+    "tree-search",
+    "code-sandbox",
+    "ollama",
+]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Environment :: Console",
+    "Framework :: AsyncIO",
+    "Intended Audience :: Developers",
+    "Intended Audience :: Education",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: POSIX",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Topic :: Scientific/Engineering :: Artificial Intelligence",
+    "Typing :: Typed",
+]
+packages = [{ include = "reflection_agent" }]
+include = [
+    { path = "LICENSE", format = ["sdist", "wheel"] },
+]
+
+[tool.poetry.scripts]
+reflection-agent = "reflection_agent.cli:main"
+reflection-agent-bench = "reflection_agent.bench:main"
+
+[tool.poetry.dependencies]
+python = "^3.11"
+langgraph = ">=1.2.17,<2"
+langgraph-checkpoint-sqlite = ">=3.1,<4"
+langchain-core = ">=1.7,<2"
+langchain-ollama = ">=1.1,<2"
+pydantic = ">=2.10,<3"
+langchain-anthropic = { version = ">=1.7,<2", optional = true }
+matplotlib = { version = ">=3.9,<4", optional = true }
+
+[tool.poetry.extras]
+anthropic = ["langchain-anthropic"]
+plot = ["matplotlib"]
+
+[tool.poetry.group.dev.dependencies]
+pytest = "^9.0"
+pytest-cov = ">=5,<8"
+ruff = ">=0.6"
+mypy = "^1.11 || ^2.0"
+bandit = "^1.7"
+pip-audit = "^2.7"
+matplotlib = ">=3.9,<4"
+
+[build-system]
+requires = ["poetry-core>=1.6.0"]
+build-backend = "poetry.core.masonry.api"
+
+# --------------------------------------------------------------------------- #
+# Ruff - lint + format
+# --------------------------------------------------------------------------- #
+[tool.ruff]
+line-length = 100
+target-version = "py311"
+
+[tool.ruff.lint]
+select = [
+    "E", "W",       # pycodestyle
+    "F",            # pyflakes
+    "I",            # isort
+    "B",            # bugbear
+    "S",            # bandit-style security
+    "UP",           # pyupgrade
+    "SIM",          # simplify
+    "RET",          # returns
+    "PIE",          # misc
+    "ASYNC",        # async pitfalls
+]
+
+[tool.ruff.lint.per-file-ignores]
+"tests/**/*.py" = ["S101", "S311", "E501"]
+"examples/**/*.py" = ["S101"]
+"scripts/**/*.py" = ["S603", "S404", "E501"]
+# The sandbox is the one place that starts a process: a fixed argv, no shell (see SECURITY.md).
+"reflection_agent/sandbox.py" = ["S603", "S404"]
+
+[tool.ruff.lint.isort]
+force-single-line = true
+known-first-party = ["reflection_agent", "tests", "examples"]
+
+# --------------------------------------------------------------------------- #
+# Pytest
+# --------------------------------------------------------------------------- #
+[tool.pytest.ini_options]
+python_files = ["test_*.py"]
+addopts = [
+    "-ra",
+    "--strict-markers",
+    "--strict-config",
+    "--cov=reflection_agent",
+    "--cov-report=term-missing",
+]
+testpaths = ["tests"]
+filterwarnings = ["error"]
+
+# --------------------------------------------------------------------------- #
+# MyPy
+# --------------------------------------------------------------------------- #
+[tool.mypy]
+python_version = "3.11"
+strict = true
+warn_unused_ignores = true
+warn_redundant_casts = true
+plugins = ["pydantic.mypy"]
+
+[[tool.mypy.overrides]]
+module = ["matplotlib", "matplotlib.*"]
+ignore_missing_imports = true
+
+# --------------------------------------------------------------------------- #
+# Coverage
+# --------------------------------------------------------------------------- #
+[tool.coverage.run]
+branch = true
+source = ["reflection_agent"]
+
+[tool.coverage.report]
+fail_under = 85
+exclude_lines = [
+    "pragma: no cover",
+    "if TYPE_CHECKING:",
+    "if __name__ == .__main__.:",
+]
+omit = [
+    "reflection_agent/__main__.py",
+    # Runs only inside the sandbox subprocess; tests exercise it end to end there.
+    "reflection_agent/sandbox_child.py",
+]
+
+# --------------------------------------------------------------------------- #
+# Bandit
+# --------------------------------------------------------------------------- #
+[tool.bandit]
+exclude_dirs = ["tests", "examples", "scripts", ".venv", "build", "dist"]

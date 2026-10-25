@@ -1,0 +1,68 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="640" viewBox="0 0 1280 640">
+  <defs>
+    <marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0 0 L10 5 L0 10 z" fill="#f59e0b"/>
+    </marker>
+    <style>
+      text { font-family: "DejaVu Sans", "Helvetica Neue", Arial, sans-serif; }
+      .t { fill: #e2e8f0; font-size: 22px; }
+      .s { fill: #94a3b8; font-size: 16px; }
+      .m { fill: #f59e0b; font-size: 15px; font-family: "DejaVu Sans Mono", monospace; }
+      .row { fill: #cbd5e1; font-size: 15px; font-family: "DejaVu Sans Mono", monospace; }
+      .box { fill: #111a33; stroke: #f59e0b; stroke-width: 2; }
+      .card { fill: #0f172a; stroke: #334155; stroke-width: 2; }
+      .e { stroke: #f59e0b; stroke-width: 2.5; fill: none; marker-end: url(#a); }
+      .ed { stroke: #f59e0b; stroke-width: 2.5; fill: none; stroke-dasharray: 7 6; marker-end: url(#a); }
+      .bar { fill: #f59e0b; }
+      .barb { fill: #334155; }
+    </style>
+  </defs>
+  <rect width="1280" height="640" fill="#0b1020"/>
+
+  <text x="80" y="108" fill="#f8fafc" font-size="56" font-weight="700">langgraph-reflection-agent</text>
+  <text x="80" y="156" fill="#94a3b8" font-size="25">Draft, critique, revise: reflection, Reflexion and LATS in LangGraph, all local.</text>
+
+  <!-- generator -->
+  <rect class="box" x="80" y="270" width="190" height="84" rx="14"/>
+  <text class="t" x="175" y="306" text-anchor="middle">actor</text>
+  <text class="s" x="175" y="332" text-anchor="middle">draft + lessons</text>
+  <path class="e" d="M270 312 L 338 312"/>
+
+  <!-- evaluator -->
+  <rect class="box" x="340" y="270" width="210" height="84" rx="14"/>
+  <text class="t" x="445" y="306" text-anchor="middle">evaluate</text>
+  <text class="s" x="445" y="332" text-anchor="middle">rubric · tests in sandbox</text>
+  <path class="e" d="M550 312 L 618 312"/>
+
+  <!-- reflector -->
+  <rect class="box" x="620" y="270" width="200" height="84" rx="14"/>
+  <text class="t" x="720" y="306" text-anchor="middle">reflect</text>
+  <text class="s" x="720" y="332" text-anchor="middle">critique → lesson</text>
+
+  <!-- loop back -->
+  <path class="ed" d="M720 354 C 720 450, 175 450, 175 356"/>
+  <text class="m" x="448" y="470" text-anchor="middle">revise until score ≥ threshold or max iterations</text>
+
+  <!-- memory pill -->
+  <rect x="330" y="198" width="230" height="38" rx="19" fill="#0b1020" stroke="#f59e0b" stroke-width="2" stroke-dasharray="5 4"/>
+  <text class="m" x="445" y="223" text-anchor="middle">episodic memory (store)</text>
+  <path d="M330 217 C 220 217, 175 230, 175 268" stroke="#f59e0b" stroke-width="2" stroke-dasharray="4 4" fill="none"/>
+  <path d="M560 217 C 680 217, 720 230, 720 268" stroke="#f59e0b" stroke-width="2" stroke-dasharray="4 4" fill="none"/>
+
+  <!-- convergence card -->
+  <rect class="card" x="880" y="210" width="320" height="290" rx="14"/>
+  <text x="900" y="242" fill="#64748b" font-size="15">unit tests passed per attempt</text>
+  <rect class="barb" x="920" y="270" width="56" height="190" rx="4"/>
+  <rect class="bar" x="920" y="397" width="56" height="63" rx="4"/>
+  <rect class="barb" x="1010" y="270" width="56" height="190" rx="4"/>
+  <rect class="bar" x="1010" y="302" width="56" height="158" rx="4"/>
+  <rect class="barb" x="1100" y="270" width="56" height="190" rx="4"/>
+  <rect class="bar" x="1100" y="270" width="56" height="190" rx="4"/>
+  <text class="row" x="948" y="484" text-anchor="middle">33%</text>
+  <text class="row" x="1038" y="484" text-anchor="middle">83%</text>
+  <text class="row" x="1128" y="484" text-anchor="middle">100%</text>
+
+  <!-- footer -->
+  <text class="s" x="80" y="566">basic reflection (rubric critic)  ·  Reflexion (tools, citations, lessons, sandboxed tests)  ·  LATS-lite (UCT tree search)</text>
+  <text class="s" x="80" y="596">bounded loops  ·  hardened subprocess sandbox  ·  runs 100% locally on ollama</text>
+</svg>

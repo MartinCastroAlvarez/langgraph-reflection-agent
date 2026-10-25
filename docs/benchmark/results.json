@@ -1,0 +1,243 @@
+{
+  "meta": {
+    "date": "2026-10-25",
+    "python": "3.12.3",
+    "langgraph": "1.2.17",
+    "model": "FakeReflectionModel (scripted)",
+    "limits": {
+      "threshold": 8.0,
+      "max_iterations": 4,
+      "max_attempts": 3,
+      "candidates": 3,
+      "max_expansions": 4
+    }
+  },
+  "rows": [
+    {
+      "variant": "reflect",
+      "status": "passed",
+      "score": 8.6,
+      "iterations": 3,
+      "curve": [
+        5.0,
+        7.0,
+        8.6
+      ],
+      "llm_calls": 6,
+      "llm_calls_by_role": {
+        "generator": 3,
+        "reflector": 3
+      },
+      "seconds": 0.009,
+      "task": "idempotency (text)",
+      "evaluator": "rubric critic"
+    },
+    {
+      "variant": "reflexion",
+      "status": "passed",
+      "score": 0.86,
+      "attempts": 3,
+      "curve": [
+        0.5,
+        0.7,
+        0.86
+      ],
+      "references": [
+        "idempotency"
+      ],
+      "recalled": 0,
+      "tool_calls": 3,
+      "llm_calls": 11,
+      "llm_calls_by_role": {
+        "actor": 3,
+        "revisor": 3,
+        "reflector": 3,
+        "self_reflection": 2
+      },
+      "seconds": 0.014,
+      "task": "idempotency (text)",
+      "evaluator": "critic"
+    },
+    {
+      "variant": "lats",
+      "status": "passed",
+      "score": 8.7,
+      "expansions": 2,
+      "nodes": 6,
+      "curve": [
+        7.0,
+        8.7
+      ],
+      "children": [
+        [
+          5.0,
+          6.2,
+          7.0
+        ],
+        [
+          8.6,
+          8.7,
+          6.2
+        ]
+      ],
+      "best_id": 5,
+      "llm_calls": 12,
+      "llm_calls_by_role": {
+        "expander": 6,
+        "reflector": 6
+      },
+      "seconds": 0.009,
+      "task": "idempotency (text)",
+      "evaluator": "rubric critic"
+    },
+    {
+      "variant": "reflect",
+      "status": "passed",
+      "score": 8.3,
+      "iterations": 4,
+      "curve": [
+        4.9,
+        7.1,
+        7.6,
+        8.3
+      ],
+      "llm_calls": 8,
+      "llm_calls_by_role": {
+        "generator": 4,
+        "reflector": 4
+      },
+      "seconds": 0.008,
+      "task": "vary header (text)",
+      "evaluator": "rubric critic"
+    },
+    {
+      "variant": "reflexion",
+      "status": "max_attempts",
+      "score": 0.76,
+      "attempts": 3,
+      "curve": [
+        0.49,
+        0.71,
+        0.76
+      ],
+      "references": [
+        "caching"
+      ],
+      "recalled": 0,
+      "tool_calls": 3,
+      "llm_calls": 11,
+      "llm_calls_by_role": {
+        "actor": 3,
+        "revisor": 3,
+        "reflector": 3,
+        "self_reflection": 2
+      },
+      "seconds": 0.014,
+      "task": "vary header (text)",
+      "evaluator": "critic"
+    },
+    {
+      "variant": "lats",
+      "status": "passed",
+      "score": 8.3,
+      "expansions": 2,
+      "nodes": 6,
+      "curve": [
+        7.6,
+        8.3
+      ],
+      "children": [
+        [
+          4.9,
+          7.6,
+          7.1
+        ],
+        [
+          7.1,
+          8.3,
+          7.6
+        ]
+      ],
+      "best_id": 5,
+      "llm_calls": 12,
+      "llm_calls_by_role": {
+        "expander": 6,
+        "reflector": 6
+      },
+      "seconds": 0.01,
+      "task": "vary header (text)",
+      "evaluator": "rubric critic"
+    },
+    {
+      "variant": "reflexion",
+      "status": "passed",
+      "score": 1.0,
+      "attempts": 2,
+      "curve": [
+        0.667,
+        1.0
+      ],
+      "references": [
+        "luhn"
+      ],
+      "recalled": 0,
+      "tool_calls": 6,
+      "llm_calls": 5,
+      "llm_calls_by_role": {
+        "actor": 2,
+        "revisor": 2,
+        "self_reflection": 1
+      },
+      "seconds": 0.07,
+      "task": "luhn (code)",
+      "evaluator": "unit tests (sandbox)"
+    },
+    {
+      "variant": "reflexion",
+      "status": "passed",
+      "score": 1.0,
+      "attempts": 3,
+      "curve": [
+        0.333,
+        0.833,
+        1.0
+      ],
+      "references": [
+        "roman-numerals"
+      ],
+      "recalled": 0,
+      "tool_calls": 6,
+      "llm_calls": 8,
+      "llm_calls_by_role": {
+        "actor": 3,
+        "revisor": 3,
+        "self_reflection": 2
+      },
+      "seconds": 0.072,
+      "task": "roman (code)",
+      "evaluator": "unit tests (sandbox)"
+    },
+    {
+      "variant": "reflexion",
+      "status": "passed",
+      "score": 1.0,
+      "attempts": 1,
+      "curve": [
+        1.0
+      ],
+      "references": [
+        "run-length-encoding"
+      ],
+      "recalled": 0,
+      "tool_calls": 2,
+      "llm_calls": 2,
+      "llm_calls_by_role": {
+        "actor": 1,
+        "revisor": 1
+      },
+      "seconds": 0.027,
+      "task": "rle (code)",
+      "evaluator": "unit tests (sandbox)"
+    }
+  ]
+}
